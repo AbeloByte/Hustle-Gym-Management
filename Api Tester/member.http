@@ -1,0 +1,23 @@
+@Host = http://localhost:5000
+
+###
+GET {{Host}}/api/members
+###
+# GET {{Host}}/api/members/{{memberId}}
+###
+
+###
+# POST a new member
+POST {{Host}}/api/members
+Content-Type: application/json
+
+{
+  "full_name": "John Doe",
+  "phone_number": "123456789",
+  "gender": "Male",
+  "emergency_contact": "987654321"
+}
+
+###
+Get {{Host}}/api/plans
+content-type: application/json

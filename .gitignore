@@ -29,3 +29,5 @@ temp/
 .idea/
 .DS_Store
 Thumbs.db
+
+dbqueries/dbqueries.txt
