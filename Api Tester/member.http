@@ -8,16 +8,12 @@ GET {{Host}}/api/members
 
 ###
 # POST a new member
-POST {{Host}}/api/members
+POST {{Host}}/api/members/member-register
 Content-Type: application/json
 
 {
-  "full_name": "John Doe",
-  "phone_number": "123456789",
+  "full_name": "Professional Dev",
+  "phone_number": "000111222",
   "gender": "Male",
-  "emergency_contact": "987654321"
+  "emergency_contact": "999888"
 }
-
-###
-Get {{Host}}/api/plans
-content-type: application/json
