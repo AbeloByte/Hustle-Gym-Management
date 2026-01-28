@@ -31,3 +31,5 @@ temp/
 Thumbs.db
 
 dbqueries/dbqueries.txt
+
+/src/generated/prisma

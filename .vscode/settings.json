@@ -12,5 +12,6 @@
             "database": "hustle_gym_management",
             "username": "postgres"
         }
-    ]
+    ],
+    "prisma.pinToPrisma6": true
 }
