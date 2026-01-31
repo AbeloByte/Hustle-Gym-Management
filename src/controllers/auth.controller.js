@@ -1,7 +1,4 @@
-import express from "express"
-
-import { registerService, loginService } from "../services/auth.service"
-
+import { registerService, loginService } from "../services/auth.service.js"
 
 // register req
 const register = async (req, res, next) => {
@@ -19,13 +16,11 @@ const register = async (req, res, next) => {
             },
         });
     } catch (error) {
-        next(err);
+        next(error);
     }
 }
 
-
 // login req
-
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body
@@ -37,4 +32,4 @@ const login = async (req, res, next) => {
 }
 
 
-export default {register , login}
+export { register, login };

@@ -1,9 +1,9 @@
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.js";
 
 // Registration function
-export const registerService = async ({ name, email, password, role }) => {
+ export const registerService = async ({ name, email, password, role }) => {
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -13,7 +13,7 @@ export const registerService = async ({ name, email, password, role }) => {
 
     // hash password
 
-    const hashedPass = await bcrypt.hash(password, 10)
+    const hashedPass = await bcryptjs.hash(password, 10)
 
     // create user
     const user = await prisma.user.create({
@@ -35,7 +35,7 @@ export const loginService = async ({ email, password }) => {
       if (!user) throw new Error("Invalid credentials");
 
     // check pass
-    const validpass = await bcrypt.compare(password, user.password)
+    const validpass = await bcryptjs.compare(password, user.password)
     if (!validpass) throw new Error("Invalid credentials");
 
     // token

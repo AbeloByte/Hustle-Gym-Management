@@ -8,12 +8,15 @@ GET {{Host}}/api/members
 
 ###
 # POST a new member
-POST {{Host}}/api/members/member-register
+
+
+POST {{Host}}/api/auth/register
 Content-Type: application/json
 
 {
-  "full_name": "Professional Dev",
-  "phone_number": "000111222",
-  "gender": "Male",
-  "emergency_contact": "999888"
+  "name": "Admin User",
+  "email": "admin@gym.com",
+  "password": "123456789",
+  "role": "ADMIN"
 }
+

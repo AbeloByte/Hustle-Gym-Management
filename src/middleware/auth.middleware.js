@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 const authMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startswith("Bearer "))
+        if (!authHeader || !authHeader.startsWith("Bearer "))
             return res.status(401).json({
                 success : false,
                 message: "Unauthorized"

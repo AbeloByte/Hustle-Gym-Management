@@ -1,13 +1,15 @@
-const express = require('express');
+import express from 'express';
+import errorMiddleware from './middleware/error.middleware.js';
 const app = express();
+
+import routes from './routes/index.js';
 
 app.use(express.json());
 
 
-// Routes
-const authRoutes = require('./routes/auth.routes');
-app.use('/api/auth', authRoutes);
+app.use('/api', routes);
 
-app.use(require('./middlewares/error.middleware'));
 
-module.exports = app;
+app.use(errorMiddleware);
+
+export default app;
