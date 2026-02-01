@@ -7,7 +7,7 @@ const router = express.Router();
 
 // only admin can register new user
 
-router.post("/register",  register);
+router.post("/register", authMiddleware, roleMiddleware("ADMIN"),  register);
 router.post("/login", login)
 
 

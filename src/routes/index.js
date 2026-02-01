@@ -1,13 +1,14 @@
 // this is index.js
 import express from "express"
 import authRoutes from "./auth.routes.js"
-// import userRoutes from "./user.routes"
+import memberRoutes from "./member.routes.js"
 
 
 const router = express.Router();
 
 router.use("/auth", authRoutes);
-// router.use("/users", userRoutes);
+router.use("/gym-members", memberRoutes);
+
 
 
 export default router;

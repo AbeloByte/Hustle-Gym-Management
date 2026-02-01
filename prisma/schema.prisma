@@ -32,11 +32,63 @@ enum Role {
 }
 
 // Gym Model
-model Gym {
-    id        String   @id @default(uuid())
-    name      String
-    address   String?
-    phone     String?
+// model Gym {
+//     id        String   @id @default(uuid())
+//     name      String
+//     address   String?
+//     phone     String?
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
+
+// Member Model
+model Member {
+    id          Int       @id @default(autoincrement())
+    name        String
+    email       String?   @unique
+    phone       String
+    gender      String?
+    dateOfBirth DateTime?
+    status      String    @default("active")
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // relations (later)
+    memberships Membership[]
+    attendance  Attendance[]
+    payments    Payment[]
+}
+
+// Membership Model
+model Membership {
+    id        String   @id @default(uuid())
+    memberId  String
+    type      String
+    startDate DateTime
+    endDate   DateTime
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    member    Member   @relation(fields: [memberId], references: [id])
+}
+
+// Attendance Model
+model Attendance {
+    id        String   @id @default(uuid())
+    memberId  String
+    date      DateTime @default(now())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    member    Member   @relation(fields: [memberId], references: [id])
+}
+
+// Payment Model
+model Payment {
+    id        String   @id @default(uuid())
+    memberId  String
+    amount    Float
+    date      DateTime @default(now())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    member    Member   @relation(fields: [memberId], references: [id])
 }

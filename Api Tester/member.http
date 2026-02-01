@@ -10,13 +10,37 @@ GET {{Host}}/api/members
 # POST a new member
 
 
-POST {{Host}}/api/auth/register
+# POST {{Host}}/api/auth/register
+# Content-Type: application/json
+
+# {
+#   "name": "Staff User",
+#   "email": "staff@gym.com",
+#   "password": "123456789",
+#   "role": "ADMIN"
+# }
+
+
+# Login as admin
+# POST {{Host}}/api/auth/login
+# Content-Type: application/json
+
+# {
+
+#     "email": "admin@gym.com",
+#     "password": "123456789"
+# }
+
+
+
+
+
+POST {{Host}}/api/gym-members/members
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlmZmFjNDQ3LWI2OGEtNGFhNi04ZTcxLWE4MTdlNzk4YTcxNiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2OTk4NTcxOSwiZXhwIjoxNzcwMDcyMTE5fQ.8BrAUE4j8t-vNaP30hr0yZP49TfX6b1UKqEShYWJHv4
+
 
 {
-  "name": "Admin User",
-  "email": "admin@gym.com",
-  "password": "123456789",
-  "role": "ADMIN"
+  "name": "John",
+  "phone": "123254353"
 }
-
