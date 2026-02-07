@@ -1,7 +1,7 @@
 @Host = http://localhost:5000
 
 ###
-GET {{Host}}/api/members
+# GET {{Host}}/api/members
 ###
 # GET {{Host}}/api/members/{{memberId}}
 ###
@@ -14,11 +14,13 @@ GET {{Host}}/api/members
 # Content-Type: application/json
 
 # {
-#   "name": "Staff User",
-#   "email": "staff@gym.com",
-#   "password": "123456789",
+#   "name": "Admin User",
+#   "email": "admin@gym.com",
+#   "password": "1234567890",
 #   "role": "ADMIN"
 # }
+
+
 
 
 # Login as admin
@@ -26,21 +28,50 @@ GET {{Host}}/api/members
 # Content-Type: application/json
 
 # {
-
 #     "email": "admin@gym.com",
-#     "password": "123456789"
+#     "password": "1234567890"
+# }
+
+
+# # gym create
+
+# # POST {{Host}}/api/gyms
+# # Content-Type: application/json
+
+# # {
+# #   "name": "FreeSpace Fitness Center",
+# #   "address": "123 Main St, Adama City",
+# #   "phone": "0987654321",
+# #   "email": "gym@example.com"
+# # }
+
+# ###
+# # create member
+
+# POST {{Host}}/api/gym-members/members
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTQ4ZWJlLTU1ZDYtNDA4Zi04OTNiLWNjNGVjYWM5YTA0NyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MDQ4NTE3NywiZXhwIjoxNzcwNTcxNTc3fQ.vUmxZRvPM-FCC-aX8QomAWy69umuoNGfD-duep5XWuU
+
+# {
+#   "name": "Alice Johnson",
+#   "email": "alice.johnson@example.com",
+#   "password": "secure_password_123",
+#   "role": "MEMBER",
+#   "status": "ACTIVE",
+#   "gymId": "gym-uuid-1234",
+#   "gender": "FEMALE",
+#   "dateOfBirth": "1995-08-15T00:00:00.000Z"
 # }
 
 
 
+# POST {{Host}}/api/gym/register-gym
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTQ4ZWJlLTU1ZDYtNDA4Zi04OTNiLWNjNGVjYWM5YTA0NyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MDQ4NTE3NywiZXhwIjoxNzcwNTcxNTc3fQ.vUmxZRvPM-FCC-aX8QomAWy69umuoNGfD-duep5XWuU
 
-
-POST {{Host}}/api/gym-members/members
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlmZmFjNDQ3LWI2OGEtNGFhNi04ZTcxLWE4MTdlNzk4YTcxNiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc2OTk4NTcxOSwiZXhwIjoxNzcwMDcyMTE5fQ.8BrAUE4j8t-vNaP30hr0yZP49TfX6b1UKqEShYWJHv4
-
-
-{
-  "name": "John",
-  "phone": "123254353"
-}
+# {
+#   "name": "FreeSpace Fitness Center",
+#   "address": "123 Main St, Adama City",
+#   "phone": "0987654321",
+#   "email": "fst@fitness.com"
+# }

@@ -1,4 +1,4 @@
-import { createMemberService,getMembersService,getMemberByIdService,updateMemberService,deleteMemberService } from '../services/member.service.js';
+import { createMemberService,getAllMembersService,getMemberByIdService,updateMemberService,deleteMemberService } from '../services/member.service.js';
 
 
 const createMember = async (req, res, next) => {
@@ -16,7 +16,7 @@ const createMember = async (req, res, next) => {
 // get Members
 const getMembers = async (req, res, next) => {
     try {
-        const members = await getMembersService();
+        const members = await getAllMembersService();
  res.status(200).json(members);
     } catch (error) {
         next(error);

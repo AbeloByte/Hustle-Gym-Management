@@ -6,8 +6,8 @@ import roleMiddleware from "../middleware/role.middleware.js"
 const router = express.Router();
 
 // only admin can register new user
-
-router.post("/register", authMiddleware, roleMiddleware("ADMIN"),  register);
+// authMiddleware, roleMiddleware("ADMIN")
+router.post("/register",   register);
 router.post("/login", login)
 
 
