@@ -55,6 +55,11 @@ enum Gender {
     FEMALE
 }
 
+enum PlanStatus {
+    ACTIVE
+    INACTIVE
+}
+
 // ------------------------
 // USERS (AUTH & ROLES)
 // ------------------------
@@ -68,6 +73,7 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    members   Member[]
 }
 
 // ------------------------
@@ -86,22 +92,26 @@ model Member {
     status   MemberStatus @default(ACTIVE)
     joinDate DateTime     @default(now())
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdById String?
+    createdBy   User?    @relation(fields: [createdById], references: [id])
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 
     subscriptions Subscription[]
     attendances   Attendance[]
+
+    @@index([phone]) // For faster lookups by phone number
 }
 
 // ------------------------
 // MEMBERSHIP PLANS
 // ------------------------
 model Plan {
-    id       Int    @id @default(autoincrement())
-    name     String @unique
-    price    Float
-    duration Int // in days
-
+    id            Int            @id @default(autoincrement())
+    name          String         @unique
+    price         Float
+    duration      Int // in days
+    status        PlanStatus     @default(ACTIVE)
     subscriptions Subscription[]
 }
 
@@ -131,8 +141,8 @@ model Payment {
     subscriptionId Int
     amount         Decimal
     method         PaymentMethod
+    paidAt         DateTime?
     status         PaymentStatus @default(PENDING)
-    paidAt         DateTime      @default(now())
 
     subscription Subscription @relation(fields: [subscriptionId], references: [id])
 }

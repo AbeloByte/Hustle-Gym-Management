@@ -1,21 +1,21 @@
+import { success } from "zod";
 import {
     createPlanService,
     getAllPlansService,
     getPlanByIdService,
     updatePlanService,
-    deletePlanService
+    deletePlanService,
 } from "../services/plan.service.js";
-
 
 // create plan
 const createPlan = async (req, res, next) => {
     try {
-        const planData = req.body;
-        console.log(planData);
-        const plan = await createPlanService(planData);
+        console.log(req.body);
+        const plan = await createPlanService(req.body);
         res.status(201).json({
+            success: true,
             message: "Plan created successfully",
-            plan,
+            data: plan,
         });
     } catch (error) {
         next(error);
@@ -26,22 +26,25 @@ const createPlan = async (req, res, next) => {
 const getAllPlans = async (req, res, next) => {
     try {
         const plans = await getAllPlansService();
-        res.status(200).json(plans);
-    }
-    catch (error) {
+        res.status(200).json({
+            success: true,
+            data: plans,
+        });
+    } catch (error) {
         next(error);
     }
 };
-
 
 // get plan by id
 const getPlanById = async (req, res, next) => {
     try {
         const planId = req.params.id;
         const plan = await getPlanByIdService(planId);
-        res.status(200).json(plan);
-    }
-    catch (error) {
+        res.status(200).json({
+            success: true,
+            data: plan,
+        });
+    } catch (error) {
         next(error);
     }
 };
@@ -53,11 +56,11 @@ const updatePlan = async (req, res, next) => {
         const planData = req.body;
         const updatedPlan = await updatePlanService(planId, planData);
         res.status(200).json({
+            success: true,
             message: "Plan updated successfully",
             plan: updatedPlan,
         });
-    }
-    catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -66,20 +69,16 @@ const updatePlan = async (req, res, next) => {
 const deletePlan = async (req, res, next) => {
     try {
         const planId = req.params.id;
-        await deletePlanService(planId);
+        const deletedPlan = await deletePlanService(planId);
+        const planName = deletedPlan;
+
         res.status(200).json({
-            message: `Plan with ID ${planId} deleted successfully`,
+            message: `${planName} Plan deleted successfully`,
+            data: deletedPlan,
         });
-    }
-    catch (error) {
+    } catch (error) {
         next(error);
     }
 };
 
-export {
-    createPlan,
-    getAllPlans,
-    getPlanById,
-    updatePlan,
-    deletePlan
-};
+export { createPlan, getAllPlans, getPlanById, updatePlan, deletePlan };

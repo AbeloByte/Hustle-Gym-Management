@@ -33,6 +33,7 @@ router.get(
 );
 
 router.get(
+
     "/members/:id",
     authMiddleware,
     roleMiddleware("ADMIN", "STAFF"),

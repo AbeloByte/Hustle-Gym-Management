@@ -1,35 +1,22 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-
-
-async function createPlanService(planData) {
-    const { name, price, duration } = planData;
+async function createPlanService(data) {
     // check if there is already a plan with the same name
     const existingPlan = await prisma.plan.findUnique({
-        where: { name },
+        where: { name: data.name },
     });
     if (existingPlan) {
         throw new Error("A plan with the same name already exists");
     }
 
-
     try {
-        const plan = await prisma.plan.create({
-            data: {
-                name,
-                // description,
-                price,
-                duration: duration || 30, // Default duration of 30 days if not provided
-            },
-        });
+        const plan = await prisma.plan.create({ data });
         return plan;
     } catch (error) {
         throw new Error(`Failed to create plan: ${error.message}`);
     }
-
 }
-
 
 async function getAllPlansService() {
     try {
@@ -46,8 +33,9 @@ async function getPlanByIdService(planId) {
             where: { id: Number(planId) },
         });
         if (!plan) {
-            throw new Error('Plan not found');
+            throw new Error("Plan not found");
         }
+
         return plan;
     } catch (error) {
         throw new Error(`Failed to retrieve plan: ${error.message}`);
@@ -61,13 +49,13 @@ async function updatePlanService(planId, planData) {
             where: { id: Number(planId) },
         });
         if (!existingPlan) {
-            throw new Error('Plan not found');
+            throw new Error("Plan not found");
         }
         const updatedPlan = await prisma.plan.update({
             where: { id: Number(planId) },
             data: {
                 name,
-// description,
+                // description,
                 price,
             },
         });
@@ -78,33 +66,24 @@ async function updatePlanService(planId, planData) {
 }
 
 async function deletePlanService(planId) {
-
     try {
-        const existingPlan = await prisma.plan.findUnique({
+        const deletedPlan = await prisma.plan.delete({
             where: { id: Number(planId) },
         });
-        if (!existingPlan) {
-            throw new Error('Plan not found');
-        }
-        await prisma.plan.delete({
-            where: { id: Number(planId) },
-        });
-    }
 
-    catch (error) {
-        if (error.code === 'P2025') {
-            throw new Error('Plan not found');
+        return deletedPlan.name;
+    } catch (error) {
+        if (error.code === "P2025") {
+            throw new Error("Plan not found");
         }
         throw new Error(`Failed to delete plan: ${error.message}`);
     }
-
 }
-
 
 export {
     createPlanService,
     getAllPlansService,
     getPlanByIdService,
     updatePlanService,
-    deletePlanService
+    deletePlanService,
 };

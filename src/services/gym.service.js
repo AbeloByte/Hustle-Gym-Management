@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const createGymProfile = async (gymData) => {
@@ -32,7 +32,7 @@ const updateGymProfile = async (gymData) => {
     try {
         const existingProfile = await prisma.gymProfile.findFirst();
         if (!existingProfile) {
-            throw new Error('Gym profile not found');
+            throw new Error("Gym profile not found");
         }
 
         const updatedProfile = await prisma.gymProfile.update({

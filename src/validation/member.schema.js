@@ -35,7 +35,9 @@ const updateMemberSchema = z
         email: z.string().email("Invalid email address").optional().nullable(),
         gender: z.enum(["MALE", "FEMALE"]).optional(),
         dateOfBirth: z.coerce.date().optional(),
-        status: z.enum(["ACTIVE", "SUSPENDED", "EXPIRED"]).optional(),
+        status: z
+            .enum(["ACTIVE", "SUSPENDED", "EXPIRED", "INACTIVE"])
+            .optional(),
     })
     .refine((data) => Object.keys(data).length > 0, {
         message: "At least one field is required to update member",
