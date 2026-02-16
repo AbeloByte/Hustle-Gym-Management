@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.js";
 
 // Registration function
- export const registerService = async ({ name, email, password, role }) => {
-
+export const registerService = async ({ name, email, password, role }) => {
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -13,7 +12,7 @@ import prisma from "../config/prisma.js";
 
     // hash password
 
-    const hashedPass = await bcryptjs.hash(password, 10)
+    const hashedPass = await bcryptjs.hash(password, 10);
 
     // create user
     const user = await prisma.user.create({
@@ -21,46 +20,41 @@ import prisma from "../config/prisma.js";
             name,
             email,
             password: hashedPass,
-            role
+            role,
         },
-    })
+    });
     return user;
-
-}
+};
 
 // Login
 export const loginService = async ({ email, password }) => {
-
-      const user = await prisma.user.findUnique({ where: { email } });
-      if (!user) throw new Error("Invalid credentials");
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("Invalid credentials");
 
     // check pass
-    const validpass = await bcryptjs.compare(password, user.password)
+    const validpass = await bcryptjs.compare(password, user.password);
     if (!validpass) throw new Error("Invalid credentials");
 
     // token
-    const token = jwt.sign({
-        id: user.id,
-        role: user.role
-    },
+    const token = jwt.sign(
+        {
+            id: user.id,
+            role: user.role,
+        },
         process.env.JWT_SECRET,
         {
-            expiresIn: "1d"
-        }
+            expiresIn: "1d",
+        },
     );
-
 
     return {
         token,
         user: {
             id: user.id,
-            name : user.name,
-            role : user.role
-        }
-    }
-}
-
-
-
+            name: user.name,
+            role: user.role,
+        },
+    };
+};
 
 // export default { registerService, loginService}

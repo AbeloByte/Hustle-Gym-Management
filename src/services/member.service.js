@@ -1,102 +1,102 @@
-import bcryptjs from 'bcryptjs';
 // Business logic for core member management (Separation of Concerns applied)
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * Create a new member along with the associated user
- * @param {Object} memberData - { name, email, password, gender, dateOfBirth }
+ * Create a new member
+ * @param {Object} memberData - { fullName|name, phone, email, gender, dateOfBirth, status }
  */
 async function createMemberService(memberData) {
-  const { name, email, password, gender, dateOfBirth } = memberData;
+    const { fullName, name, phone, email, gender, status } = memberData;
+    const resolvedFullName = fullName ?? name;
 
-  if (!name || !email || !password) {
-    throw new Error('Name, email, and password are required');
-  }
-
-  try {
-    const hashedPassword = await bcryptjs.hash(password, 10);
-
-    const member = await prisma.$transaction(async (prismaTx) => {
-      const user = await prismaTx.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role: 'MEMBER',
-        },
-      });
-
-      return prismaTx.member.create({
-        data: {
-          gender,
-          dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
-          user: {
-            connect: { id: user.id },
-          },
-        },
-        include: { user: true },
-      });
-    });
-
-    return member;
-  } catch (error) {
-    console.error('Error creating member:', error);
-
-    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-      throw new Error('Email already exists');
+    if (!resolvedFullName || !phone || !gender) {
+        throw new Error("fullName (or name), phone, and gender are required");
     }
 
-    throw error;
-  }
-}
+    try {
+        // const parsedDate =
+        //     dateOfBirth instanceof Date ? dateOfBirth : new Date(dateOfBirth);
 
+        // if (Number.isNaN(parsedDate.getTime())) {
+        //     throw new Error("dateOfBirth must be a valid date");
+        // }
+
+        return await prisma.member.create({
+            data: {
+                fullName: resolvedFullName,
+                phone,
+                email,
+                gender,
+                dateOfBirth: null,
+                ...(status ? { status } : {}),
+            },
+        });
+    } catch (error) {
+        console.error("Error creating member:", error);
+
+        if (error.code === "P2002" && error.meta?.target?.includes("phone")) {
+            throw new Error("Phone already exists");
+        }
+
+        throw error;
+    }
+}
 
 /**
  * Get a single member by ID
  * @param {number|string} memberId
  */
 async function getMemberByIdService(memberId) {
-  return await prisma.member.findUnique({
-    where: { id: Number(memberId) },
-    include: { user: true },
-  });
+    return await prisma.member.findUnique({
+        where: { id: Number(memberId) },
+    });
 }
 
 /**
  * Get all members
  */
 async function getAllMembersService() {
-  return await prisma.member.findMany({
-    include: { user: true },
-    orderBy: { joinDate: 'desc' },
-  });
+    return await prisma.member.findMany({
+        orderBy: { joinDate: "desc" },
+    });
 }
 
 /**
- * Update member info (and optionally user info)
+ * Update member info
  * @param {number|string} memberId
- * @param {Object} updateData - { name, email, gender, dateOfBirth, status, userId }
+ * @param {Object} updateData - { fullName|name, phone, email, gender, dateOfBirth, status }
  */
 async function updateMemberService(memberId, updateData) {
-  const { name, email, gender, dateOfBirth, status, userId } = updateData;
+    const { fullName, name, phone, email, gender, dateOfBirth, status } =
+        updateData;
 
-  // Update user info if provided
-  if (name || email) {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { name, email },
+    const data = {
+        ...(fullName || name ? { fullName: fullName ?? name } : {}),
+        ...(phone !== undefined ? { phone } : {}),
+        ...(email !== undefined ? { email } : {}),
+        ...(gender !== undefined ? { gender } : {}),
+        ...(status !== undefined ? { status } : {}),
+    };
+
+    if (dateOfBirth !== undefined) {
+        const parsedDate =
+            dateOfBirth instanceof Date ? dateOfBirth : new Date(dateOfBirth);
+
+        if (Number.isNaN(parsedDate.getTime())) {
+            throw new Error("dateOfBirth must be a valid date");
+        }
+
+        data.dateOfBirth = parsedDate;
+    }
+
+    const member = await prisma.member.update({
+        where: { id: Number(memberId) },
+        data,
     });
-  }
 
-  // Update member info
-  const member = await prisma.member.update({
-    where: { id: Number(memberId) },
-    data: { gender, dateOfBirth, status },
-  });
-
-  return member;
+    return member;
 }
 
 /**
@@ -105,18 +105,17 @@ async function updateMemberService(memberId, updateData) {
  */
 
 async function deleteMemberService(memberId) {
-  return await prisma.member.update({
-    where: { id: Number(memberId) },
-    data: { status: 'SUSPENDED' },
-  });
+    return await prisma.member.update({
+        where: { id: Number(memberId) },
+        data: { status: "SUSPENDED" },
+    });
 }
-
 
 //
 export {
-  createMemberService,
-  getMemberByIdService,
-  getAllMembersService,
-  updateMemberService,
-  deleteMemberService,
+    createMemberService,
+    getMemberByIdService,
+    getAllMembersService,
+    updateMemberService,
+    deleteMemberService,
 };

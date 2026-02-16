@@ -5,6 +5,7 @@
 .env.*
 !.env.example
 
+
 # Logs
 logs/
 *.log
@@ -20,6 +21,7 @@ coverage/
 .nyc_output/
 .cache/
 
+member.http
 # Temp files
 tmp/
 temp/
@@ -33,3 +35,11 @@ Thumbs.db
 dbqueries/dbqueries.txt
 
 /src/generated/prisma
+
+
+
+
+
+
+
+

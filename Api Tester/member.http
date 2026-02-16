@@ -14,10 +14,10 @@
 # Content-Type: application/json
 
 # {
-#   "name": "Admin User",
-#   "email": "admin@gym.com",
-#   "password": "1234567890",
-#   "role": "ADMIN"
+#   "name": "Staff User",
+#   "email": "staff@gym.com",
+#   "password": "1234567890Abcd",
+#   "role": "STAFF"
 # }
 
 
@@ -29,7 +29,7 @@
 
 # {
 #     "email": "admin@gym.com",
-#     "password": "1234567890"
+#     "password": "1234567890Abcd"
 # }
 
 
@@ -50,11 +50,11 @@
 
 # POST {{Host}}/api/gym-members/members
 # Content-Type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTQ4ZWJlLTU1ZDYtNDA4Zi04OTNiLWNjNGVjYWM5YTA0NyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MDQ4NTE3NywiZXhwIjoxNzcwNTcxNTc3fQ.vUmxZRvPM-FCC-aX8QomAWy69umuoNGfD-duep5XWuU
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTQ4ZWJlLTU1ZDYtNDA4Zi04OTNiLWNjNGVjYWM5YTA0NyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MDQ5MjM0MywiZXhwIjoxNzcwNTc4NzQzfQ.roAcdiWfHTwlTjWlQFLz1sACGfQpXrhrqbwpL-d4cEQ
 
 # {
 #   "name": "Alice Johnson",
-#   "email": "alice.johnson@example.com",
+#   "email": "alice.johson@example.com",
 #   "password": "secure_password_123",
 #   "role": "MEMBER",
 #   "status": "ACTIVE",
@@ -75,3 +75,31 @@
 #   "phone": "0987654321",
 #   "email": "fst@fitness.com"
 # }
+
+
+# POST {{Host}}/api/membership-plan/createPlan
+# Content-Type:  application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMTQ4ZWJlLTU1ZDYtNDA4Zi04OTNiLWNjNGVjYWM5YTA0NyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MDQ5MjM0MywiZXhwIjoxNzcwNTc4NzQzfQ.roAcdiWfHTwlTjWlQFLz1sACGfQpXrhrqbwpL-d4cEQ
+
+# {
+#   "name": "hustle plan",
+#   "price": 1400,
+#   "duration": 1
+# }
+
+
+# POST {{Host}}/api/gym-members/members
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRmNmFiMGZjLWVmZWEtNDhhYy1hMjk1LTcwMjc5N2FkNTVhNiIsInJvbGUiOiJTVEFGRiIsImlhdCI6MTc3MTI0MjI2MCwiZXhwIjoxNzcxMzI4NjYwfQ.GI90FtsamdevMr8ni3ccBm_Trl5s163SBsDUDE1UiAI
+
+# {
+#   "fullName": "joe Jaden",
+#   "phone": "091234567866",
+#   "email": "joe.jayden@example.com",
+#   "gender": "MALE"
+
+# }
+
+
+GET {{Host}}/api/gym-members/members
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRmNmFiMGZjLWVmZWEtNDhhYy1hMjk1LTcwMjc5N2FkNTVhNiIsInJvbGUiOiJTVEFGRiIsImlhdCI6MTc3MTI0MjI2MCwiZXhwIjoxNzcxMzI4NjYwfQ.GI90FtsamdevMr8ni3ccBm_Trl5s163SBsDUDE1UiAI
