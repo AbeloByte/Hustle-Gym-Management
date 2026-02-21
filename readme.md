@@ -203,9 +203,9 @@ Register is restricted to ADMIN, so you must already be logged in as an admin to
 ## 🧱 Tech Stack (Suggested)
 
 * **Backend**: Node.js, Express
-* **Database**: MongoDB / PostgreSQL
+* **Database**:  PostgreSQL
 * **Auth**: JWT, bcrypt
-* **ORM/ODM**: Prisma / Mongoose
+* **ORM/ODM**: Prisma 
 * **Scheduling**: node-cron
 
 ---

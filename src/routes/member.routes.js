@@ -25,15 +25,9 @@ router.post(
     createMember,
 );
 
-router.get(
-    "/members",
-    authMiddleware,
-    roleMiddleware("ADMIN"),
-    getMembers,
-);
+router.get("/members", authMiddleware, roleMiddleware("ADMIN"), getMembers);
 
 router.get(
-
     "/members/:id",
     authMiddleware,
     roleMiddleware("ADMIN", "STAFF"),

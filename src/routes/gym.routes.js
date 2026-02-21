@@ -13,9 +13,9 @@ import gymInfoSchema from "../validation/gymInfo.schema.js";
 const router = express.Router();
 
 // router.use("/register-gym", authMiddleware, createGymInfo);
-router.use("/register-gym", validate(gymInfoSchema), createGymInfo);
+router.post("/register-gym", validate(gymInfoSchema), createGymInfo);
 router.get("/gym-profile", authMiddleware, roleMiddleware("ADMIN"), getGymInfo);
-router.use(
+router.put(
     "/update-gym-profile",
     validate(gymInfoSchema),
     authMiddleware,

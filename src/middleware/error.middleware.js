@@ -3,9 +3,8 @@ const errorMiddleware = (err, req, res, next) => {
     // mutliple error types handling
     res.status(err.status || 500).json({
         success: false,
-        message: err.message || "Internal Server Error"
+        message: err.message || "Internal Server Error",
     });
-}
-
+};
 
 export default errorMiddleware;
