@@ -25,6 +25,11 @@ test.http
 # Temp files
 tmp/
 temp/
+# My temporary test runner
+test-runner.js
+last_test_run.txt
+current_test.txt
+
 
 # Editor and OS files
 .vscode/

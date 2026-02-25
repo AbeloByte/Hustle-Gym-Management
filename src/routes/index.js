@@ -14,4 +14,8 @@ router.use("/gym-members", memberRoutes);
 router.use("/membership-plan", gymPlan);
 router.use("/membership", membershipRoutes);
 
+router.get("/health", (req, res) => {
+    res.status(200).json({ success: true, message: "Server is healthy" });
+});
+
 export default router;
