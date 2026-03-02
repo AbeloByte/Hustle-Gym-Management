@@ -1,227 +1,127 @@
 # 🏋️ Gym Management System – Backend
 
-A structured and scalable backend system for managing gym members, memberships, payments, attendance, and reports. This project follows a **clean, step-by-step feature implementation order** to ensure maintainability and growth.
+A robust, scalable backend API for managing a modern gym. It handles members, subscriptions, payments, attendance, and role-based access control. Built with **Node.js**, **Express**, and **PostgreSQL (via Prisma)**.
+
+## 🚀 Features
+
+-   **🔐 Authentication & Authorization**: Secure user registration and login using JWT. Role-based access control (RBAC) ensuring data security for Admins, Staff, and Members.
+-   **👥 Member Management**: Complete CRUD operations for gym members, including tracking their status (Active, Suspended, Expired).
+-   **📋 Plan Management**: Create and manage flexible membership plans with different durations and pricing.
+-   **💳 Subscription & Payments**: Handle member subscriptions and track payment status (Paid, Pending, Failed).
+-   **📅 Attendance Tracking**: Monitor member check-ins and attendance history.
+-   **🏢 Gym Profile**: Manage gym branding and contact details.
+-   **✅ Data Validation**: Strict payload validation using **Zod** to ensure data integrity.
+-   **🧪 Testing included**: Integration tests setup with **Vitest**.
+
+## 🛠️ Tech Stack
+
+-   **Runtime Environment**: [Node.js](https://nodejs.org/)
+-   **Framework**: [Express.js](https://expressjs.com/)
+-   **Database**: [PostgreSQL](https://www.postgresql.org/)
+-   **ORM**: [Prisma](https://www.prisma.io/)
+-   **Authentication**: JSON Web Tokens (JWT) & bcryptjs
+-   **Validation**: [Zod](https://zod.dev/)
+-   **Testing**: [Vitest](https://vitest.dev/) & Supertest
+-   **Utilities**: ID generation with `nanoid`, Environment management with `dotenv`
+
+## 📂 Project Structure
+
+```bash
+gymBack/
+├── prisma/                 # Database schema and migrations
+│   └── schema.prisma       # Prisma schema file
+├── src/
+│   ├── config/             # Configuration files (DB connection, etc.)
+│   ├── controllers/        # Request handlers (logic orchestration)
+│   ├── middleware/         # Express middleware (Auth, Error, Validation)
+│   ├── routes/             # API Route definitions
+│   ├── services/           # Business logic layer
+│   ├── utils/              # Utility functions
+│   ├── validation/         # Zod schemas for input validation
+│   ├── app.js              # Express app setup
+│   └── server.js           # Server entry point
+├── tests/                  # Integration tests
+└── package.json            # Project dependencies and scripts
+```
+
+## ⚡ Getting Started
+
+Follow these steps to set up the project locally.
+
+### Prerequisites
+
+-   **Node.js** (v18 or higher recommended)
+-   **PostgreSQL** installed and running
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone <repository_url>
+    cd gymBack
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Environment Configuration**
+    Create a `.env` file in the root directory and add the following variables:
+    ```env
+    PORT=3000
+    # Update with your local PostgreSQL credentials
+    DATABASE_URL="postgresql://request_user:request_password@localhost:5432/gym_db?schema=public"
+    JWT_SECRET="your_super_secret_key_change_this"
+    ```
+
+4.  **Database Setup**
+    Run Prisma migrations to create the tables in your database:
+    ```bash
+    npx prisma migrate dev --name init
+    ```
+
+5.  **Start the Server**
+    ```bash
+    npm run dev
+    ```
+    The server will start on `http://localhost:3000` (or your defined PORT).
+
+### 🧪 Running Tests
+
+To run the test suite:
+```bash
+npm test
+```
+
+## 📡 API Endpoints Overview
+
+All routes are prefixed with `/api`.
+
+| Module | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **Auth** | POST | `/auth/register` | Register a new user |
+| | POST | `/auth/login` | Login and receive a JWT |
+| | GET | `/auth/me` | Get current user info |
+| **Members** | GET | `/members` | List all members |
+| | POST | `/members` | Register a new member |
+| | GET | `/members/:id` | Get member details |
+| **Plans** | GET | `/plans` | Get all membership plans |
+| | POST | `/plans` | Create a new plan (Admin) |
+| **Gym** | GET | `/gym` | Get gym profile info |
+| | PUT | `/gym` | Update gym profile |
+| **Payment** | POST | `/payments` | Record a payment |
+| **Attendance** | POST | `/attendance/check-in`| Member check-in |
+
+*(Note: This is a high-level summary. Please refer to the route files or API documentation for full details.)*
+
+## 🤝 Contributing
+
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
 ---
-
-## 🎯 Project Goal
-
-To build a secure and scalable Gym Management System backend using **Node.js + Express**, following best practices in authentication, authorization, and modular architecture.
-
----
-
-## 🧭 Feature Implementation Order (Very Important)
-
-This order is intentional. Each feature depends on the previous one.
-
----
-
-## 🥇 1. Project Setup & Core Infrastructure
-
-> **Foundation of the entire system**
-
-### Features
-
-* Express application setup
-* Clean folder structure (routes, controllers, services, models)
-* Database connection (MongoDB / PostgreSQL)
-* Environment configuration
-* Global error handling
-
-### Why first?
-
-Without a solid foundation, all future features become hard to maintain and debug.
-
----
-
-## 🥈 2. Authentication (Auth)
-
-> **Identity of the system**
-
-### Features
-
-* User registration
-* User login
-* JWT token generation
-* Password hashing
-
-### Why second?
-
-* Every secured request depends on authentication
-* Authorization and roles rely on logged-in users
-
----
-
-## 🔐 Authentication & Middleware Logic (How it works)
-
-This backend uses a layered flow: **route → middleware → controller → service → database**.
-
-### 1) Request flow
-
-1. The client calls an endpoint like POST /api/auth/login.
-2. The route file matches the URL and attaches any middleware.
-3. Middleware runs first (token checks, role checks).
-4. If middleware passes, the controller runs.
-5. The controller calls the service for business logic.
-6. The service talks to Prisma and returns data.
-
-### 2) Authentication (JWT)
-
-**Login** returns a signed JWT. The token contains user id and role.
-**Protected routes** require the token in the Authorization header as:
-
-Authorization: Bearer <JWT>
-
-### 3) Middleware responsibilities
-
-**Auth middleware** verifies the JWT and sets req.user.
-If missing or invalid, it returns 401.
-
-**Role middleware** checks req.user.role against allowed roles.
-If role is not allowed, it returns 403.
-
-### 4) Why register is protected
-
-Register is restricted to ADMIN, so you must already be logged in as an admin to create new users. This prevents random public account creation.
-
-### 5) Where the logic lives
-
-- Routing: [src/routes/auth.routes.js](src/routes/auth.routes.js)
-- Controller: [src/controllers/auth.controller.js](src/controllers/auth.controller.js)
-- Service: [src/services/auth.service.js](src/services/auth.service.js)
-- Auth middleware: [src/middleware/auth.middleware.js](src/middleware/auth.middleware.js)
-- Role middleware: [src/middleware/role.middleware.js](src/middleware/role.middleware.js)
-- Prisma client: [src/config/prisma.js](src/config/prisma.js)
-
----
-
-## 🥉 3. Authorization (Roles & Permissions)
-
-> **Access control**
-
-### Roles
-
-* **Admin** – full access
-* **Staff** – operational tasks
-* **Member** – personal access
-
-### Examples
-
-* Only admins can create membership plans
-* Staff can mark attendance
-* Members can view their own data
-
----
-
-## 🏅 4. User Management
-
-> **Core entity of the system**
-
-### Features
-
-* Create gym members
-* View all users
-* Update user information
-* Assign or change roles
-
----
-
-## 🏋️ 5. Membership Plans
-
-> **Business logic begins here**
-
-### Features
-
-* Create membership plans
-* Plan types (monthly, yearly)
-* Price definition
-* Duration handling
-
----
-
-## 🧾 6. Membership Assignment
-
-> **Heart of the system**
-
-### Features
-
-* Assign membership plans to users
-* Calculate start and end dates
-* Track membership status (active / expired)
-
----
-
-## 💳 7. Payments
-
-> **Money and transaction tracking**
-
-### Features
-
-* Record payments
-* Payment history
-* Link payments to memberships
-
----
-
-## 📅 8. Attendance
-
-> **Daily gym operations**
-
-### Features
-
-* Member check-in
-* Attendance logs
-* Staff-controlled attendance marking
-
----
-
-## 📊 9. Reports & Dashboard
-
-> **Business insights**
-
-### Features
-
-* Active members report
-* Expired memberships report
-* Monthly revenue summary
-
----
-
-## 🚀 10. Advanced Features (Future Enhancements)
-
-> **Scalability & automation**
-
-### Features
-
-* Auto-expire memberships (cron jobs)
-* Email / SMS reminders
-* Mobile application support
-* Admin dashboard
-
----
-
-## 🧱 Tech Stack (Suggested)
-
-* **Backend**: Node.js, Express
-* **Database**:  PostgreSQL
-* **Auth**: JWT, bcrypt
-* **ORM/ODM**: Prisma 
-* **Scheduling**: node-cron
-
----
-
-## 📌 Notes
-
-* Follow the feature order strictly
-* Each module should be independent and testable
-* Keep business logic out of controllers
-
----
-
-## 👤 Author
-
-**Hebel**
-
----
-
-✅ This README serves as both **documentation and a development roadmap**.
+**Happy Coding!** 🏋️‍♂️

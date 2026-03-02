@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.js";
 
 // Registration function
-export const registerService = async ({ name, email, password, role }) => {
+const registerService = async ({ name, email, password, role }) => {
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -27,7 +27,7 @@ export const registerService = async ({ name, email, password, role }) => {
 };
 
 // Login
-export const loginService = async ({ email, password }) => {
+const loginService = async ({ email, password }) => {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) throw new Error("Invalid credentials");
 
@@ -43,7 +43,7 @@ export const loginService = async ({ email, password }) => {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: "1d",
+            expiresIn: "15m",
         },
     );
 
@@ -57,4 +57,22 @@ export const loginService = async ({ email, password }) => {
     };
 };
 
-// export default { registerService, loginService}
+const getCurrentUserService = async (userId) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+        },
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return user;
+};
+
+export { registerService, loginService, getCurrentUserService };

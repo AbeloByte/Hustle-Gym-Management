@@ -1,4 +1,8 @@
-import { registerService, loginService } from "../services/auth.service.js";
+import {
+    registerService,
+    loginService,
+    getCurrentUserService,
+} from "../services/auth.service.js";
 
 // register req
 const register = async (req, res, next) => {
@@ -23,10 +27,30 @@ const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const result = await loginService({ email, password });
-        res.status(201).json(result);
+
+        res.cookie("token", result.token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+
+        res.status(200).json({
+            user: result.user,
+        });
     } catch (error) {
         next(error);
     }
 };
 
-export { register, login };
+const getCurrentUserController = async (req, res, next) => {
+    try {
+        const user = await getCurrentUserService(req.user.id);
+
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { register, login, getCurrentUserController };

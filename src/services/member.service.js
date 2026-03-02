@@ -8,7 +8,19 @@ const prisma = new PrismaClient();
  * @param {Object} memberData - { fullName|name, phone, email, gender, dateOfBirth, status }
  */
 async function createMemberService(memberData) {
-    const { fullName, name, phone, email, gender, status } = memberData;
+    const {
+        fullName,
+        name,
+        phone,
+        email,
+        gender,
+        status,
+        dateOfBirth,
+        joinDate,
+        planId,
+        paymentStatus,
+        paymentMethod,
+    } = memberData;
     const resolvedFullName = fullName ?? name;
 
     if (!resolvedFullName || !phone || !gender) {
@@ -23,15 +35,62 @@ async function createMemberService(memberData) {
         //     throw new Error("dateOfBirth must be a valid date");
         // }
 
-        return await prisma.member.create({
+        // Start by creating the member
+        const member = await prisma.member.create({
             data: {
                 fullName: resolvedFullName,
                 phone,
                 email,
                 gender,
-                dateOfBirth: null,
+                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
                 ...(status ? { status } : {}),
             },
+        });
+
+        // If a planId was provided, create a subscription and optional payment
+        if (planId) {
+            const plan = await prisma.plan.findUnique({
+                where: { id: Number(planId) },
+            });
+            if (!plan) {
+                throw new Error("Plan not found");
+            }
+
+            const start = joinDate ? new Date(joinDate) : new Date();
+            const end = new Date(start);
+            end.setDate(end.getDate() + Number(plan.duration || 0));
+
+            const subscription = await prisma.subscription.create({
+                data: {
+                    memberId: member.id,
+                    planId: plan.id,
+                    startDate: start,
+                    endDate: end,
+                    status: "ACTIVE",
+                },
+            });
+
+            // create payment record linked to the subscription
+            await prisma.payment.create({
+                data: {
+                    subscriptionId: subscription.id,
+                    amount: plan.price,
+                    method: paymentMethod ? paymentMethod : "CASH",
+                    status: paymentStatus ? paymentStatus : "PENDING",
+                    paidAt:
+                        paymentStatus === "PAID"
+                            ? joinDate
+                                ? new Date(joinDate)
+                                : new Date()
+                            : null,
+                },
+            });
+        }
+
+        // return the member with subscriptions loaded
+        return await prisma.member.findUnique({
+            where: { id: member.id },
+            include: { subscriptions: true },
         });
     } catch (error) {
         console.error("Error creating member:", error);
