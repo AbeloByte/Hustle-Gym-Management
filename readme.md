@@ -24,6 +24,29 @@ A robust, scalable backend API for managing a modern gym. It handles members, su
 -   **Testing**: [Vitest](https://vitest.dev/) & Supertest
 -   **Utilities**: ID generation with `nanoid`, Environment management with `dotenv`
 
+## ▶️ How to Run the Project
+
+From the project root (gymBack/):
+
+1. Install dependencies:
+    ```bash
+    npm install
+    ```
+2. Create a .env file in the root (see details below) and make sure DATABASE_URL points to a running PostgreSQL database.
+3. Apply database migrations:
+    ```bash
+    npx prisma migrate dev
+    ```
+4. Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The API will be available at http://localhost:3000 (or the PORT you configured).
+5. (Optional) Run tests:
+    ```bash
+    npm test
+    ```
+
 ## 📂 Project Structure
 
 ```bash
